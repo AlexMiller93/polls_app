@@ -16,7 +16,7 @@ USER_STATUSES = [
 
 class Score(models.Model):
     """ """
-    score = models.IntegerField(default=0)
+    points = models.IntegerField(default=0)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 
@@ -28,7 +28,7 @@ class Question(models.Model):
     difficulty = models.CharField(blank=True, max_length=100)
     text = models.CharField(blank=True, max_length=1000)
     correct_answer = models.CharField(blank=True, max_length=100)
-    incorrect_answer = models.CharField(blank=True, max_length=100)
+    wrong_answer = models.CharField(blank=True, max_length=100)
     answer1 = models.CharField(blank=True, max_length=100)
     answer2 = models.CharField(blank=True, max_length=100)
     answer3 = models.CharField(blank=True, max_length=100)
