@@ -7,22 +7,25 @@
     </a>
     {% with request.resolver_match.view_name as view_name %}
     {% if user.is_authenticated %}
-      <div class="bg text-dark">{{ user.username }}{% if view_name  == 'users:login' or view_name  == 'users:signup'  %}{%else%}:{{score.score}}{%endif%}</div>
+      <div class="bg text-dark">
+        {{ user.username }}
+          {% if view_name  == 'users:login' or view_name  == 'users:signup'  %}
+          {%else%} Score:{{score.score}}{%endif%}</div>
     {%endif%}
     {% endwith %}
     {% with request.resolver_match.view_name as view_name %}
 
     <ul class="nav nav-pills">
       <li class="nav-item"> 
-        <a class="nav-link link-light {% if view_name  == 'app:index' %}active{% endif %}" href="">Home</a>
+        <a class="nav-link link-light {% if view_name  == 'polls:index' %}active{% endif %}" href="">Home</a>
       </li>
       <ul class="nav nav-pills">
         <li class="nav-item"> 
-          <a class="nav-link link-light {% if view_name  == 'app:upgrade' %}active{% endif %}" href="">Upgrade</a>
+          <a class="nav-link link-light {% if view_name  == 'polls:upgrade' %}active{% endif %}" href="">Upgrade</a>
         </li>
     <ul class="nav nav-pills">
       <li class="nav-item"> 
-        <a class="nav-link link-light {% if view_name  == 'app:top' %}active{% endif %}" href="">Dashboard</a>
+        <a class="nav-link link-light {% if view_name  == 'polls:top' %}active{% endif %}" href="">Dashboard</a>
       </li>
       {% if user.is_authenticated %}
         <li class="nav-item"> 

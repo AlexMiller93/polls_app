@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'users.apps.UsersConfig',
+    'polls.apps.PollsConfig',
 ]
 
 MIDDLEWARE = [
@@ -129,4 +130,4 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'users:login'
-LOGIN_REDIRECT_URL = 'app:index'
+LOGIN_REDIRECT_URL = 'polls:index'
