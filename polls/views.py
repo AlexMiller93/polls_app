@@ -2,9 +2,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 
-from core.settings import URL_BOOL, URL_MULTIPLE
+from core.settings import URL
 from polls.models import Score, Status, Question
-from polls.utils import parse_question, update_score_status
+from polls.utils import parse_question, update_score_status, update_score_status_2
 
 # Create your views here.
 
@@ -86,8 +86,7 @@ def quiz(request):
         question = get_object_or_404(Question, user=request.user)
         user_answer = request.POST.get('user_answer')
 
-        if question.correct_answer == user_answer and \
-                question.text == request.POST.get('question'):
+        if question.correct_answer == user_answer:
             current_score += 1
             score.points = current_score
 
@@ -101,8 +100,8 @@ def quiz(request):
             'correct_answer': correct_answer,
             'results': [{'question': text}],
             'score': score,
-            'is_answered': True,
-            'status': status
+            'is_right_answered': True,
+            'status': status.status
         }
 
         return render(
@@ -112,7 +111,7 @@ def quiz(request):
         )
 
     else:
-        json_data = parse_question(URL_BOOL)
+        json_data = parse_question(URL, is_multiple=False)
 
         if not Question.objects.filter(user=request.user).exists():
             Question.objects.create(user=request.user)
@@ -197,7 +196,7 @@ def quiz_multiple(request):
             context=context
         )
 
-    json_data = parse_question(URL_MULTIPLE)
+    json_data = parse_question(URL, is_multiple=True)
 
     if not Question.objects.filter(user=request.user).exists():
         Question.objects.create(user=request.user)

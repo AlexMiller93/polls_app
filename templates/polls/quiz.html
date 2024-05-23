@@ -11,6 +11,7 @@
       <div class="card-body">
         <p>
           <form method="post" action="{% url 'polls:quiz' %}">
+
             {% csrf_token %}
             {% for result in results %}
               <div>
@@ -18,6 +19,9 @@
                 Answer: {{ result.correct_answer}}
               </div>
               <br><br>
+              {%if not is_post %}
+                <p>Question: </p>
+              {% endif %}
               {{ result.question|safe }} 
               <br><br>
               <input type="hidden" name="category" value="{{result.category}}">

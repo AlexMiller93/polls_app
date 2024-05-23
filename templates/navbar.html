@@ -3,19 +3,23 @@
 <nav class="navbar navbar-light" style="background-color:{%if status == 'Amateur'%} #20a997{%elif status == 'PRO'%} #cc4545{%elif status == 'KING'%} #adc4bd{%else%}lightskyblue{%endif%}">
   <div class="container">
     <a class="navbar-brand" href="">
-      {% comment %} <img src="{% static 'img/logo.png' %}" width="30" height="30" class="d-inline-block align-top" alt=""> {% endcomment %}
-      <span style="color:blue">Q</span>uiz
+      <span style="color:blue">Pools</span>
     </a>
     {% with request.resolver_match.view_name as view_name %}
 
     {% if user.is_authenticated %}
-      <div class="bg text-dark">
-        {% comment %} TODO: center text {% endcomment %}
-        {{ user.username }}
+      <div class="bg text-dark text-left">
+        Welcome to Polls, <span style="color:red">{{ user.username }}</span>!
+      </div>
+      <div class="bg text-dark text-center">
           {% if view_name  == 'users:login' or view_name  == 'users:signup'  %}
-          {%else%} Your score: {{score.points}}{%endif%}</div>
+          {%else%} Your score: <span style="color:red">{{score.points}}</span>{%endif%}
+      </div>
+      <div class="bg text-dark text-right">
+        Your status:  <span style="color:red">{{ status }}</span>
+      </div>
     {%endif%}
-        Your status: {{ status }}
+      
     {% endwith %}
 
     {% with request.resolver_match.view_name as view_name %}
@@ -24,19 +28,21 @@
       <li class="nav-item"> 
         <a class="nav-link link-light {% if view_name  == 'polls:index' %}active{% endif %}" href="{% url 'polls:index' %}">Home</a>
       </li>
-    <ul class="nav nav-pills">
-      <li class="nav-item"> 
-        <a class="nav-link link-light {% if view_name  == 'polls:upgrade' %}active{% endif %}" href="{% url 'polls:upgrade' %}">Upgrade</a>
-      </li>
-    <ul class="nav nav-pills">
-      <li class="nav-item"> 
-        <a class="nav-link link-light {% if view_name  == 'polls:clean' %}active{% endif %}" href="{% url 'polls:clean' %}">Clean</a>
-      </li>
+    
     <ul class="nav nav-pills">
       <li class="nav-item"> 
         <a class="nav-link link-light {% if view_name  == 'polls:top' %}active{% endif %}" href="{% url 'polls:top' %}">Dashboard</a>
       </li>
+
       {% if user.is_authenticated %}
+        <ul class="nav nav-pills">
+          <li class="nav-item"> 
+            <a class="nav-link link-light {% if view_name  == 'polls:upgrade' %}active{% endif %}" href="{% url 'polls:upgrade' %}">Upgrade</a>
+          </li>
+        <ul class="nav nav-pills">
+          <li class="nav-item"> 
+            <a class="nav-link link-light {% if view_name  == 'polls:clean' %}active{% endif %}" href="{% url 'polls:clean' %}">Clean</a>
+          </li>
         <li class="nav-item"> 
           <a class="nav-link link-light {% if view_name  == 'users:logout' %}active{% endif %}" href="{% url 'users:logout' %}">Log out</a>
         </li>

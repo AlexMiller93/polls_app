@@ -132,5 +132,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'polls:index'
 
-URL_BOOL = 'https://opentdb.com/api.php?amount=1&type=boolean'
-URL_MULTIPLE = 'https://opentdb.com/api.php?amount=1&type=multiple'
+URL = 'https://opentdb.com/api.php?amount=1&type='

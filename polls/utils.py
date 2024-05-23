@@ -8,26 +8,46 @@ from django.http import HttpResponseServerError
 from polls.models import Score, Status
 
 
-score_dict = {
-    'Beginner': 50,
-    'Amateur': 100,
-    'PRO': 200,
-}
+def parse_question(url: str, is_multiple: bool):
+    if is_multiple:
+        url += 'multiple'
+    else:
+        url += 'boolean'
 
-
-def parse_question(url: str):
     try:
         response = requests.get(url)
     except Exception as error:
         return HttpResponseServerError(error)
-    if not response.status_code == 200:
+    if response.status_code != 200:
         return HttpResponseServerError(
             'Service not available. Please try again later')
 
     return response.json()
 
 
-def update_score_status(status: Status, score: Score, data: Dict['str', int]):
+def update_score_status(
+        status: Status, score: Score, data: Dict['str', int]) -> None:
+    for key, value in data.items():
+
+        if status.status != 'BEST':
+            if key == 'Beginner' and score.points >= value:
+                status.status = 'Amateur'
+                score.points -= value
+            elif key == 'Amateur' and score.points >= value:
+                status.status = 'PRO'
+                score.points -= value
+            elif key == 'PRO' and score.points >= value:
+                score.points -= value
+                status.status = 'BEST'
+
+            score.save()
+            status.save()
+
+    return redirect(reverse_lazy('polls:upgrade'))
+
+
+def update_score_status_2(
+        status: Status, score: Score, data: Dict['str', int]) -> None:
     for value in data.values():
 
         if status.status != 'BEST':
@@ -45,7 +65,6 @@ def update_score_status(status: Status, score: Score, data: Dict['str', int]):
             status.save()
 
     return redirect(reverse_lazy('polls:upgrade'))
-
 
 def show_status_text(
         status: Status, score: Score, data: Dict['str', int]) -> Dict:

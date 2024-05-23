@@ -1,7 +1,7 @@
 {%extends 'base.html'%}
 {%block content%}
 <div class="row justify-content-center">
-  <div class="col-md-6 p-5">
+  <div class="col-md-5 p-5">
     <div class="card">
       <div class="card-header">
         Score: {{score.points}}
@@ -18,19 +18,31 @@
               </div>
               <br><br>
               <input type="hidden" name="question" value="{{result.question}}">
-              <p>Question: </p>
+              {%if not is_post %}
+                <p>Question: </p>
+              {% endif %}
               {{result.question|safe}} 
             {%endfor%}
 
               <br><br>
 
-              {%for answer in answers%}
-                <p><input type="radio" class="button" required name="user_answer" value="{{answer}}">{{answer|safe}}</p>
-              {%endfor%}
-              {% comment %}  Right answer was:{% endcomment %}
-              {{correct_answer|safe}}<br>
+              <div class="card" style="width: 18rem;">
+                {% for answer in answers %}
+                  <p class='text-start m-2 p-2'>
+                    <input type="radio" class="form-check-input" required name="user_answer" value="{{answer}}" id="answer">
+                    <label class="form-check-label" for="answer">{{answer|safe}}</label>
+                  </p>
+                  
+                {%endfor%}
+              </div>
+              <br><br>
+              {%if is_post %}
+              Right answer was: {{correct_answer|safe}}<br>
+              {% endif %}
+              
+              <br><br>
               {%if is_post %} 
-              {%if is_answered %} 
+              {%if is_right_answered %} 
                 <a class="btn btn-success" href="{%url 'polls:quiz_multiple'%}" role="button">Next</a> 
               {%else%}
                 <a class="btn btn-danger" href="{%url 'polls:quiz_multiple'%}" role="button">Next</a>
