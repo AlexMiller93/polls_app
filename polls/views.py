@@ -64,7 +64,8 @@ def top_users(request):
             'bests': bests,
             'prof': best_prof,
             'amateurs': best_amateurs,
-            'status': status.status}
+            'status': status.status
+            }
 
         return render(
             request,

@@ -9,9 +9,10 @@
   <table class="table table-striped">
     <thead>
       <tr >
-        <th>Nickname</th>
-        <th>Status</th>
-        <th>Score</th>
+        <th>Name</th>
+        <th>Boolean polls</th>
+        <th>Multiple polls</th>
+        <th>Total score</th>
       </tr>
     </thead>
     
@@ -20,7 +21,8 @@
       {%for best in bests %}
         <tr >
           <td class="table-dark">{{best.user.username}} </td>
-          <td class="table-dark">{{best.status}}</td>
+          <td class="table-dark">{{best.counter_bool}}</td>
+          <td class="table-dark">{{best.counter_multiple}}</td>
           <td class="table-dark">{{best.points}}</td>
         </tr>
       {%endfor%}
@@ -28,14 +30,16 @@
       {%for pro in prof %}
         <tr>
           <td class="table-danger">{{pro.user.username}} </td>
-          <td class="table-danger">{{pro.status}}</td>
+          <td class="table-danger">{{pro.counter_bool}}</td>
+          <td class="table-danger">{{pro.counter_multiple}}</td>
           <td class="table-danger">{{pro.points}}</td>
         </tr>
         {%endfor%}
       {%for amateur in amateurs%}
         <tr>
           <td class="table-success">{{amateur.user.username}} </td>
-          <td class="table-success">{{amateur.status}}</td>
+          <td class="table-success">{{amateur.counter_bool}}</td>
+          <td class="table-success">{{amateur.counter_multiple}}</td>
           <td class="table-success">{{amateur.points}}</td>
         </tr>
       {%endfor%}
