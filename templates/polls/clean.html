@@ -1,0 +1,35 @@
+{% extends 'base.html'%}
+
+{%block title%}Clean{%endblock%}
+
+{%block content%}
+
+<div class="container py-5">
+    <div class="col-md-8 p-5">
+      <div class="card">
+        <div class="card-header">
+            <div class="row justify-content-center"> 
+                <div class="col-md-8 p-5">
+                  {% if not_clean %}
+                    <p><b>Do you want to clean your status? <br></p>
+                  {% endif %}
+                  <div class="card">
+                    Your score: {{score.points}}
+                    <div class="card-header">
+                        Your status: {{status}}<br>    
+                    </div>
+                  {% if not_clean %}
+                    <form method="post" action="{% url 'polls:clean' %}">
+                      {% csrf_token %}
+                    <input class="btn btn-success w-100" type="submit"  value="Clean">
+                  {% endif %}
+                  </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+{%endblock%}
+

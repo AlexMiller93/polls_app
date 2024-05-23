@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 
 from core.settings import URL_BOOL, URL_MULTIPLE
 from polls.models import Score, Status, Question
-from polls.utils import parse_question
+from polls.utils import parse_question, update_score_status
 
 # Create your views here.
 
@@ -63,7 +63,7 @@ def quiz(request):
             'results': [{'question': text}],
             'score': score,
             'is_answered': True,
-            'status': status.status
+            'status': status
         }
 
         return render(
@@ -124,9 +124,6 @@ def quiz_multiple(request):
         user_answer = request.POST.get('user_answer')
         is_answered = False
 
-        # if question.text != request.POST.get('question'):
-        #     return redirect(reverse_lazy('polls:quiz_multiple'))
-
         if question.correct_answer == user_answer:
             current_score += 5
             score.points = current_score
@@ -150,6 +147,7 @@ def quiz_multiple(request):
             'results': [{'question': text, }],
             'answers': answers,
             'score': score,
+            'is_post': True,
             'is_answered': is_answered,
             'status': status.status
         }
@@ -204,3 +202,126 @@ def quiz_multiple(request):
         template_name='polls/quiz_multiple.html',
         context=context
         )
+
+
+@login_required
+def upgrade_status(request):
+    
+    status_data = {
+        'Beginner': 20,
+        'Amateur': 50,
+        'PRO': 70,
+    }
+
+    if not Status.objects.filter(user=request.user).exists():
+        Status.objects.create(user=request.user)
+    status = Status.objects.get(user=request.user)
+    score = Score.objects.get(user=request.user)
+
+    if request.method == 'POST':
+        update_score_status(status, score, status_data)
+
+    for value in status_data.values():
+        if status.status == 'Beginner' and score.points >= value:
+            context = {
+                'text': f'you can upgrade to AMATEUR ({value} points)',
+                'status': status.status,
+                'score': score,
+                'upgrade': True
+            }
+            return render(
+                request,
+                template_name='polls/upgrade.html',
+                context=context
+            )
+
+        if status.status == 'Amateur' and score.points >= value:
+            context = {
+                'text': f'you can upgrade to PRO ({value} points)',
+                'status': status.status,
+                'score': score,
+                'upgrade': True
+            }
+            return render(
+                request,
+                template_name='polls/upgrade.html',
+                context=context
+            )
+
+        if status.status == 'PRO' and score.points >= value:
+            context = {
+                'text': f'you can upgrade to the BEST ({value} points)',
+                'status': status.status,
+                'score': score,
+                'upgrade': True
+            }
+            return render(
+                request,
+                template_name='polls/upgrade.html',
+                context=context
+            )
+
+        if status.status == 'BEST':
+            context = {
+                'BEST': True,
+                'score': score,
+                'status': status.status,
+            }
+            return render(
+                request,
+                template_name='polls/upgrade.html',
+                context=context
+            )
+
+        context = {
+            'text': '''Not available<br>Amateur - 50 points<br>
+                PRO - 70 points<br>BEST - 100 points''',
+            'score': score,
+            'status': status.status,
+                    }
+
+        return render(
+                request,
+                template_name='polls/upgrade.html',
+                context=context
+            )
+
+
+@login_required
+def clean_status_score(request):
+    status = Status.objects.get(user=request.user)
+    score = Score.objects.get(user=request.user)
+    not_clean = None
+
+    if score.points > 0:
+        not_clean = True
+    not_clean = False
+
+    if request.method == 'POST':
+        status.status = 'Beginner'
+        score.points = 0
+        not_clean = False
+
+        context = {
+            'score': score,
+            'status': status.status,
+            'not_clean': not_clean
+        }
+
+        return render(
+                    request,
+                    template_name='polls/clean.html',
+                    context=context
+                )
+
+    context = {
+            'score': score,
+            'status': status.status,
+            'not_clean': not_clean
+        }
+
+    return render(
+                request,
+                template_name='polls/clean.html',
+                context=context
+            )

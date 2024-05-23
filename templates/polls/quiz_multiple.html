@@ -24,7 +24,16 @@
                 <p><input type="radio" class="button" required name="user_answer" value="{{answer}}">{{answer|safe}}</p>
               {%endfor%}
               {{correct_answer|safe}}<br>
-              {%if is_answered %} <a class="btn btn-success" href="{%url 'polls:quiz_multiple'%}" role="button">next</a> {%else%}<a class="btn btn-danger" href="{%url 'polls:quiz_multiple'%}" role="button">next</a>{%endif%}{%else%} <input class="btn btn-secondary" type="submit"  value="Send">{%endif%}
+              {%if is_post %} 
+              {%if is_answered %} 
+                <a class="btn btn-success" href="{%url 'polls:quiz_multiple'%}" role="button">Next</a> 
+              {%else%}
+                <a class="btn btn-danger" href="{%url 'polls:quiz_multiple'%}" role="button">Next</a>
+              {%endif%}
+              
+              {%else%} 
+                <input class="btn btn-secondary" type="submit"  value="Send">
+              {%endif%}
             
           </form> 
         </p>

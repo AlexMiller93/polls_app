@@ -13,7 +13,7 @@
         {% comment %} TODO: center text {% endcomment %}
         {{ user.username }}
           {% if view_name  == 'users:login' or view_name  == 'users:signup'  %}
-          {%else%} Score:{{score.points}}{%endif%}</div>
+          {%else%} Your score: {{score.points}}{%endif%}</div>
     {%endif%}
         Your status: {{ status }}
     {% endwith %}
@@ -24,10 +24,14 @@
       <li class="nav-item"> 
         <a class="nav-link link-light {% if view_name  == 'polls:index' %}active{% endif %}" href="{% url 'polls:index' %}">Home</a>
       </li>
-      <ul class="nav nav-pills">
-        <li class="nav-item"> 
-          <a class="nav-link link-light {% if view_name  == 'polls:upgrade' %}active{% endif %}" href="">Upgrade</a>
-        </li>
+    <ul class="nav nav-pills">
+      <li class="nav-item"> 
+        <a class="nav-link link-light {% if view_name  == 'polls:upgrade' %}active{% endif %}" href="{% url 'polls:upgrade' %}">Upgrade</a>
+      </li>
+    <ul class="nav nav-pills">
+      <li class="nav-item"> 
+        <a class="nav-link link-light {% if view_name  == 'polls:clean' %}active{% endif %}" href="{% url 'polls:clean' %}">Clean</a>
+      </li>
     <ul class="nav nav-pills">
       <li class="nav-item"> 
         <a class="nav-link link-light {% if view_name  == 'polls:top' %}active{% endif %}" href="">Dashboard</a>
