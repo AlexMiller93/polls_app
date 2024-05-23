@@ -5,6 +5,7 @@ from polls.views import (
     index,
     quiz,
     quiz_multiple,
+    top_users,
     upgrade_status
 )
 
@@ -16,4 +17,5 @@ urlpatterns = [
     path('quiz_multiple/', quiz_multiple, name='quiz_multiple'),
     path('upgrade/', upgrade_status, name='upgrade'),
     path('clean/', clean_status_score, name='clean'),
+    path('top/', top_users, name='top'),
 ]

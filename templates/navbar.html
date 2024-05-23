@@ -34,7 +34,7 @@
       </li>
     <ul class="nav nav-pills">
       <li class="nav-item"> 
-        <a class="nav-link link-light {% if view_name  == 'polls:top' %}active{% endif %}" href="">Dashboard</a>
+        <a class="nav-link link-light {% if view_name  == 'polls:top' %}active{% endif %}" href="{% url 'polls:top' %}">Dashboard</a>
       </li>
       {% if user.is_authenticated %}
         <li class="nav-item"> 

@@ -27,6 +27,45 @@ def index(request):
     return render(request, template_name='polls/index.html',)
 
 
+def top_users(request):
+    best = Status.objects.filter(status='BEST').values('user')
+    bests = Score.objects.order_by('-points').filter(user__in=best)[:3]
+    prof = Status.objects.filter(status='PRO').values('user')
+    best_prof = Score.objects.order_by('-points').filter(user__in=prof)[:3]
+    amateurs = Status.objects.filter(status='Amateur').values('user')
+    best_amateurs = Score.objects.order_by('-points').filter(user__in=amateurs)[:3]
+
+    if request.user.is_authenticated:
+
+        status = Status.objects.get(user=request.user)
+
+        score = Score.objects.get(user=request.user)
+
+        context = {
+            'score': score,
+            'bests': bests,
+            'prof': best_prof,
+            'amateurs': best_amateurs,
+            'status': status.status}
+
+        return render(
+            request,
+            template_name='polls/top_users.html',
+            context=context
+        )
+
+    context = {
+        'bests': bests,
+        'prof': best_prof,
+        'amateurs': best_amateurs
+    }
+
+    return render(
+        request,
+        template_name='polls/top_users.html',
+        context=context)
+
+
 @login_required
 def quiz(request):
     # get status
@@ -206,7 +245,7 @@ def quiz_multiple(request):
 
 @login_required
 def upgrade_status(request):
-    
+
     status_data = {
         'Beginner': 20,
         'Amateur': 50,

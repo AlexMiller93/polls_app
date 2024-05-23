@@ -1,0 +1,46 @@
+{%extends 'base.html'%}
+
+{% block title %}Top users{% endblock %}
+
+{%block content%}
+
+<div class="container py-4">
+  <br><br>
+  <table class="table table-striped">
+    <thead>
+      <tr >
+        <th>Nickname</th>
+        <th>Status</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    
+    <br><br>
+    <tbody>
+      {%for best in bests %}
+        <tr >
+          <td class="table-dark">{{best.user.username}} </td>
+          <td class="table-dark">{{best.status}}</td>
+          <td class="table-dark">{{best.points}}</td>
+        </tr>
+      {%endfor%}
+
+      {%for pro in prof %}
+        <tr>
+          <td class="table-danger">{{pro.user.username}} </td>
+          <td class="table-danger">{{pro.status}}</td>
+          <td class="table-danger">{{pro.points}}</td>
+        </tr>
+        {%endfor%}
+      {%for amateur in amateurs%}
+        <tr>
+          <td class="table-success">{{amateur.user.username}} </td>
+          <td class="table-success">{{amateur.status}}</td>
+          <td class="table-success">{{amateur.points}}</td>
+        </tr>
+      {%endfor%}
+
+    </tbody>
+  </table>
+</div>
+{%endblock%}
