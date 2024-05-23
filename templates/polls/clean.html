@@ -10,9 +10,13 @@
         <div class="card-header">
             <div class="row justify-content-center"> 
                 <div class="col-md-6 p-5">
+                  
                   {% if not_clean %}
                     <p><b>Do you want to clean your status? <br></p>
+                  {% else %}
+                      <p><b>You score is zero. Try to answer the questions.<br></p>
                   {% endif %}
+
                   <div class="card">
                     Your score: {{score.points}}
                     <div class="card-header">

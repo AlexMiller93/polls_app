@@ -14,7 +14,7 @@ class ScoreAdmin(admin.ModelAdmin):
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('user', 'text')
+    list_display = ('user', 'text', 'category', 'difficulty', 'question_type')
 
 
 class StatusAdmin(admin.ModelAdmin):

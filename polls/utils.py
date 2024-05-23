@@ -1,11 +1,11 @@
-from typing import Dict
+from typing import Dict, List
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 import requests
 
 from django.http import HttpResponseServerError
 
-from polls.models import Score, Status
+from polls.models import Question, Score, Status
 
 
 def parse_question(url: str, is_multiple: bool):
@@ -66,6 +66,7 @@ def update_score_status_2(
 
     return redirect(reverse_lazy('polls:upgrade'))
 
+
 def show_status_text(
         status: Status, score: Score, data: Dict['str', int]) -> Dict:
     # status, score -> text, upgrade
@@ -122,3 +123,35 @@ def show_status_text(
                 }
 
     return context  
+
+
+def get_question_answers(question: Question, data) -> List:
+    question.category = data['results'][0]['category']
+    question.type = data['results'][0]['type']
+    question.difficulty = data['results'][0]['difficulty']
+    question.question = data['results'][0]['question']
+    question.correct_answer = data['results'][0]['correct_answer']
+    question.incorrect_answers = data['results'][0]['incorrect_answers']
+
+    all_answers = list(
+        {
+            *data['results'][0]['incorrect_answers'],
+            data['results'][0]['correct_answer']
+        }
+    )
+
+    question.answer1 = all_answers[0]
+    question.answer2 = all_answers[1]
+    question.answer3 = all_answers[2]
+    question.answer4 = all_answers[3]
+
+    question.save()
+
+    answers_lst = [
+        question.answer1,
+        question.answer2,
+        question.answer3,
+        question.answer4,
+    ]
+
+    return answers_lst
