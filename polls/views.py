@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 
 from core.settings import URL
 from polls.models import Score, Status, Question
-from polls.utils import parse_question, update_score_status, update_score_status_2
+from polls.utils import parse_question, update_score_status
 
 # Create your views here.
 

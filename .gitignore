@@ -1,6 +1,7 @@
 .venv/
 not_published/
 
+.vscode/
 __pycache__/
 
 .env
