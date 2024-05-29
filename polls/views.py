@@ -16,27 +16,30 @@ from polls.utils import (
 def index(request):
     """ Функция для отображения статуса и счета пользователя """
 
-    if request.user.is_authenticated:
-        if not Status.objects.filter(user=request.user).exists():
-            Status.objects.create(user=request.user, status='Beginner')
-        status = Status.objects.get(user=request.user)
+    if not request.user.is_authenticated:
+        return render(request, template_name='polls/index.html')
+    
+    status = Status.objects.get_or_create(user=request.user)
+    score = Score.objects.get_or_create(user=request.user)
 
-        if not Score.objects.filter(user=request.user).exists():
-            Score.objects.create(user=request.user)
-        score = Score.objects.get(user=request.user)
+    context = {
+            'score': score,
+            'status': status.status
+        }
 
-        context = {
-                'score': score,
-                'status': status.status
-            }
+    return render(
+        request,
+        template_name='polls/index.html',
+        context=context
+    )
 
-        return render(
-            request,
-            template_name='polls/index.html',
-            context=context
-        )
 
-    return render(request, template_name='polls/index.html')
+def _get_top_info_users(status: Status) -> None:
+    """ Функция для получения пользователей по статусу"""
+    
+    status_user = Status.objects.filter(status=status).values('user')
+    top_scores = Score.objects.order_by('-points').filter(user__in=status_user)[:3]
+    return top_scores
 
 
 def top_users(request):
@@ -44,45 +47,36 @@ def top_users(request):
     Функция для отображения 3 наиболее успешных пользователей
         во всех статусах кроме Beginner
     """
-    best = Status.objects.filter(status='BEST').values('user')
-    bests = Score.objects.order_by('-points').filter(user__in=best)[:3]
-
-    prof = Status.objects.filter(status='PRO').values('user')
-    best_prof = Score.objects.order_by('-points').filter(user__in=prof)[:3]
-
-    amateurs = Status.objects.filter(status='Amateur').values('user')
-    best_amateurs = Score.objects.order_by('-points').filter(user__in=amateurs)[:3]
-
-    if request.user.is_authenticated:
-
-        # получаем статус и счет текущего пользователя
-        status = Status.objects.get(user=request.user)
-        score = Score.objects.get(user=request.user)
-
-        context = {
-            'score': score,
-            'bests': bests,
-            'prof': best_prof,
-            'amateurs': best_amateurs,
-            'status': status.status
-            }
-
-        return render(
-            request,
-            template_name='polls/top_users.html',
-            context=context
-        )
+    # get scores and status from top-3 users
+    bests = _get_top_info_users('BEST')
+    best_prof = _get_top_info_users('PRO')
+    best_amateurs = _get_top_info_users('Amateur')
 
     context = {
         'bests': bests,
         'prof': best_prof,
         'amateurs': best_amateurs
     }
-
-    return render(
+    
+    if not request.user.is_authenticated:
+        
+        return render(
         request,
         template_name='polls/top_users.html',
-        context=context)
+        context=context
+    )
+    else:
+        # получаем статус и счет текущего пользователя
+        status = Status.objects.get(user=request.user)
+        score = Score.objects.get(user=request.user)
+
+        context.update(score=score, status=status.status)
+
+        return render(
+            request,
+            template_name='polls/top_users.html',
+            context=context
+        )
 
 
 @login_required
@@ -92,11 +86,7 @@ def quiz(request):
     # получаем счет текущего пользователя,
     # создаем если его нет
 
-    if not Score.objects.filter(user=request.user).exists():
-        Score.objects.create(user=request.user)
-    score = Score.objects.get(user=request.user)
-    current_score = score.points
-    counter = score.counter_bool
+    score = Score.objects.get_or_create(user=request.user)
 
     # обработка ответа пользователя
     if request.method == 'POST':
@@ -107,10 +97,8 @@ def quiz(request):
         user_answer = request.POST.get('user_answer')
 
         if question.correct_answer == user_answer:
-            current_score += 1
-            counter += 1
-            score.points = current_score
-            score.counter_bool = counter
+            score.points += 1
+            score.counter_bool += 1
 
             score.save()
 
@@ -165,9 +153,7 @@ def quiz_multiple(request):
 
     # получаем счет текущего пользователя,
     # создаем если его нет
-    if not Score.objects.filter(user=request.user).exists():
-        Score.objects.create(user=request.user)
-    score = Score.objects.get(user=request.user)
+    score = Score.objects.get_or_create(user=request.user)
 
     current_score = score.points
     counter = score.counter_multiple
@@ -253,9 +239,7 @@ def upgrade_status(request):
         'PRO': 100,
     }
 
-    if not Status.objects.filter(user=request.user).exists():
-        Status.objects.create(user=request.user)
-    status = Status.objects.get(user=request.user)
+    status = Status.objects.get_or_create(user=request.user)
     score = Score.objects.get(user=request.user)
 
     # изменение счета и статуса после нажатия кнопки
