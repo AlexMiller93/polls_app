@@ -3,12 +3,12 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 
 from core.settings import URL
-from polls.models import Score, Status, Question
-from polls.utils import (
-    get_question_answers,
-    parse_question,
-    update_score_status
-    )
+from polls.models import Profile
+# from polls.utils import (
+#     get_question_answers,
+#     parse_question,
+#     update_score_status
+#     )
 
 # Create your views here.
 
@@ -19,12 +19,11 @@ def index(request):
     if not request.user.is_authenticated:
         return render(request, template_name='polls/index.html')
     
-    status = Status.objects.get_or_create(user=request.user)
-    score = Score.objects.get_or_create(user=request.user)
+    profile = Profile.objects.get_or_create(user=request.user)
 
     context = {
-            'score': score,
-            'status': status.status
+            'score': profile.points,
+            'status': profile.status
         }
 
     return render(
@@ -33,7 +32,7 @@ def index(request):
         context=context
     )
 
-
+'''
 def _get_top_info_users(status: Status) -> None:
     """ Функция для получения пользователей по статусу"""
     
@@ -299,12 +298,12 @@ def upgrade_status(request):
             )
 
         context = {
-            'text': '''
+            'text': """
                 Not available<br>
                 Amateur - 50 points<br>
                 PRO - 100 points<br>
                 BEST - 500 points
-                ''',
+                """,
             'score': score,
             'status': status.status,
         }
@@ -360,3 +359,5 @@ def clean_status_score(request):
                 template_name='polls/clean.html',
                 context=context
             )
+
+'''

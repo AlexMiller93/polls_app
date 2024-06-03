@@ -5,9 +5,9 @@ import requests
 
 from django.http import HttpResponseServerError
 
-from polls.models import Question, Score, Status
+# from polls.models import Question, Score, Status
 
-
+''' 
 def parse_question(url: str, is_multiple: bool):
     if is_multiple:
         url += 'multiple'
@@ -114,10 +114,10 @@ def show_status_text(
                     }
         else:
             context = {
-                'text': '''Not available to upgrade
+                'text': """Not available to upgrade
                     <br>Amateur - 50 points<br>
                     PRO - 70 points
-                    <br>BEST - 100 points''',
+                    <br>BEST - 100 points""",
                 'score': score,
                 'status': status.status,
                 }
@@ -155,3 +155,4 @@ def get_question_answers(question: Question, data) -> List:
     ]
 
     return answers_lst
+'''

@@ -1,3 +1,5 @@
+*.sqlite3
+
 .venv/
 not_published/
 
@@ -5,4 +7,5 @@ not_published/
 __pycache__/
 
 .env
+
 
