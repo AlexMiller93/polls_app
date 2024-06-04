@@ -1,11 +1,45 @@
-from typing import Dict, List
-from django.shortcuts import redirect
-from django.urls import reverse_lazy
 import requests
+from core.settings import URL
 
-from django.http import HttpResponseServerError
 
-# from polls.models import Question, Score, Status
+from polls.models import Category, Question
+
+
+def parse_questions():
+    if type == 'boolean':
+        api_url = URL + '?amount=10&type=boolean'
+    else:
+        api_url = URL + '?amount=10&type=multiple'
+        
+    response = requests.get(api_url)
+        
+    if response.status_code == 200:
+        data = response.json()
+        
+        if data.get('response_code') != 0: # ok
+            pass
+        
+        results = data.get('results')
+        for result in results:
+            
+            category = Category.objects.create(
+                name = result['category'],
+            )
+            question = Question.objects.create(
+                category=category,
+                question_type = result['type'],
+                difficulty = result['difficulty'],
+                text = result['question'],
+                correct_answer = result['correct_answer']
+            )
+            
+            
+            question.save()
+            category.save()
+
+    else:
+        print('Не удалось загрузить данные. Код ошибки: {}'.format(response.status_code))
+
 
 ''' 
 def parse_question(url: str, is_multiple: bool):

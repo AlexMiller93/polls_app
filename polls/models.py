@@ -26,7 +26,7 @@ class Category(models.Model):
     """ Таблица для сохранения категорий """
     
     name = models.CharField(
-        blank=True, max_length=100, help_text='Категория вопроса')
+        max_length=100, help_text='Категория вопроса')
 
 
 class Question(models.Model):
@@ -34,16 +34,16 @@ class Question(models.Model):
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     question_type = models.CharField(
-        blank=True, choices=TYPES, max_length=10, help_text='Тип вопроса')
+        choices=TYPES, max_length=10, help_text='Тип вопроса')
     difficulty = models.CharField(
-        blank=True, choices=DIFF_LEVELS, max_length=100, help_text='Сложность вопроса')
-    text = models.CharField(blank=True, max_length=1000, help_text='Текст вопроса')
+        choices=DIFF_LEVELS, max_length=100, help_text='Сложность вопроса')
+    text = models.CharField(max_length=1000, help_text='Текст вопроса')
     correct_answer = models.CharField(
-        blank=True, max_length=100, help_text='Правильный ответ')
-    answer1 = models.CharField(blank=True, max_length=100, help_text='1 Ответ')
-    answer2 = models.CharField(blank=True, max_length=100, help_text='2 Ответ')
-    answer3 = models.CharField(blank=True, max_length=100, help_text='3 Ответ')
-    answer4 = models.CharField(blank=True, max_length=100, help_text='4 Ответ')
+        max_length=100, help_text='Правильный ответ')
+    answer1 = models.CharField(max_length=100, help_text='1 Ответ')
+    answer2 = models.CharField(max_length=100, help_text='2 Ответ')
+    answer3 = models.CharField(max_length=100, help_text='3 Ответ')
+    answer4 = models.CharField(max_length=100, help_text='4 Ответ')
 
 
 class Answer(models.Model):
